@@ -127,7 +127,45 @@ node_setup() {
 }
 
 
-start_node() {
+
+account_bind() {
+    # Define the path for the acc.txt file
+    ACC_FILE="/root/multiple/multipleforlinux/acc.txt"
+
+    # Create the acc.txt file (if it doesn't exist) and make sure it's empty
+    echo "Creating $ACC_FILE..."
+    > "$ACC_FILE"  # Clears the file if it exists or creates it if it doesn't
+
+    # Prompt user for identifier and PIN
+    echo "Enter your account identifier:"
+    read YOUR_IDENTIFIER
+    echo "Enter your 6-digit PIN:"
+    read YOUR_PIN
+
+    # Save identifier and PIN to acc.txt
+    echo "Saving account details to $ACC_FILE..."
+    echo "Identifier: $YOUR_IDENTIFIER" >> "$ACC_FILE"
+    echo "PIN: $YOUR_PIN" >> "$ACC_FILE"
+
+    echo "Account details saved successfully to $ACC_FILE"
+
+    # Run the bind command with user input
+    echo "Binding the account..."
+    /root/multiple/multipleforlinux/multiple-cli bind --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --bandwidth-download 100 --bandwidth-upload 100 --storage 200
+
+    # Check if the binding was successful
+    if [ $? -eq 0 ]; then
+        echo "Account successfully bound!"
+    else
+        echo "Error: Failed to bind the account. Check the details and try again."
+    fi
+
+    # Call the uni_menu function to display the menu
+    master
+}
+
+
+service_node() {
     NODE_PATH="/root/multiple/multipleforlinux/multiple-node"
     LOG_FILE="/root/multiple/multipleforlinux/output.log"
 
@@ -152,33 +190,104 @@ start_node() {
 
 
 
+start_node() {
+    # Run the start command to start the node service
+    echo "Starting the node..."
+    /root/multiple/multipleforlinux/multiple-cli start
 
+    # Check if the start command ran successfully
+    if [ $? -eq 0 ]; then
+        echo "Node started successfully."
+    else
+        echo "Error: Failed to start the node. Check for any issues."
+    fi
+    
+    # Call the uni_menu function to display the menu
+    master
+}
+
+
+
+
+node_status() {
+    # Run the status command to check the node status
+    echo "Fetching node status..."
+    /root/multiple/multipleforlinux/multiple-cli status
+
+    # Check if the status command ran successfully
+    if [ $? -eq 0 ]; then
+        echo "Node status fetched successfully."
+    else
+        echo "Error: Failed to fetch node status. Check if the node is running."
+    fi
+
+    # Call the uni_menu function to display the menu
+    master
+}
+
+
+
+logs() {
+    # Run the history command to fetch the node's logs
+    echo "Fetching node logs..."
+    /root/multiple/multipleforlinux/multiple-cli history
+
+    # Check if the history command ran successfully
+    if [ $? -eq 0 ]; then
+        echo "Node logs fetched successfully."
+    else
+        echo "Error: Failed to fetch node logs."
+    fi
+
+    # Call the uni_menu function to display the menu
+    master
+}
+
+
+
+node_stop() {
+    # Run the stop command to stop the node service
+    echo "Stopping the node..."
+    /root/multiple/multipleforlinux/multiple-cli stop
+
+    # Check if the stop command ran successfully
+    if [ $? -eq 0 ]; then
+        echo "Node stopped successfully."
+    else
+        echo "Error: Failed to stop the node. Check if the node is running."
+    fi
+
+    # Call the uni_menu function to display the menu
+    master
+}
 
 
 
 # Function to display menu and prompt user for input
 master() {
     print_info "==============================="
-    print_info "    ABC Node Tool Menu      "
+    print_info "  Multiple Node Tool Menu      "
     print_info "==============================="
     print_info ""
     print_info "1. Install-Dependency"
     print_info "2. Setup-Multiple"
     print_info "3. Node-Setup"
-    print_info "4. Start-Node"
-    print_info "5. "
-    print_info "6. "
-    print_info "7. "
-    print_info "8. "
-    print_info "9. "
-    
+    print_info "4. Bind-Node"
+    print_info "5. Service-Setup"
+    print_info "6. Start-Node"
+    print_info "7. Node-Stauts"
+    print_info "8. Check-Logs"
+    print_info "9. Stop-Node"
+    print_info "10. Exit"
+    print_info
+    print_info
     print_info ""
     print_info "==============================="
     print_info " Created By : CB-Master "
     print_info "==============================="
     print_info ""
     
-    read -p "Enter your choice (1 or 3): " user_choice
+    read -p "Enter your choice (1 or 10): " user_choice
 
     case $user_choice in
         1)
@@ -191,22 +300,28 @@ master() {
             node_setup
             ;;
         4)
-            start_node
+            account_bind
             ;;
         5)
-
+            service_node
             ;;
         6)
-
+            start_node
             ;;
         7)
-
+            node_status
             ;;
         8)
+            logs
+            ;;
+        9)
+            node_stop
+            ;;
+        10)
             exit 0  # Exit the script after breaking the loop
             ;;
         *)
-            print_error "Invalid choice. Please enter 1 or 3 : "
+            print_error "Invalid choice. Please enter 1 or 10 : "
             ;;
     esac
 }
