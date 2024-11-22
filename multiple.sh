@@ -298,7 +298,7 @@ master() {
     print_info "4. Service-Start"
     print_info "5. Bind-Node"
     print_info "6. Start-Node"
-    print_info "7. Node-Stauts"
+    print_info "7. Node-Status"
     print_info "8. Check-Logs"
     print_info "9. Stop-Node"
     print_info "10. Exit"
