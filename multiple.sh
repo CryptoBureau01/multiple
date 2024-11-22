@@ -167,9 +167,16 @@ service_node() {
 
 
 account_bind() {
-    # Define the path for the acc.txt file
-    ACC_FILE="/root/multiple/multipleforlinux/acc.txt"
+    # Define the path for the working directory and acc.txt file
+    WORKING_DIR="/root/multiple/multipleforlinux"
+    ACC_FILE="$WORKING_DIR/acc.txt"
 
+    # Ensure the script starts in the working directory
+    echo "Changing to working directory: $WORKING_DIR"
+    cd "$WORKING_DIR" || { echo "Error: Unable to access $WORKING_DIR. Please check if it exists."; exit 1; }
+
+    print_info "Please wait ..."
+    sleep 1 # wait 1 second
     # Create the acc.txt file (if it doesn't exist) and make sure it's empty
     echo "Creating $ACC_FILE..."
     > "$ACC_FILE"  # Clears the file if it exists or creates it if it doesn't
@@ -187,9 +194,11 @@ account_bind() {
 
     echo "Account details saved successfully to $ACC_FILE"
 
+    print_info "Please wait ..."
+    sleep 1 # wait 1 second
     # Run the bind command with user input
-    echo "Binding the account..."
-    /root/multiple/multipleforlinux/multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 200 --bandwidth-upload 100
+    echo "Binding the account using multiple-cli..."
+    ./multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 200 --bandwidth-upload 100
 
     # Check if the binding was successful
     if [ $? -eq 0 ]; then
