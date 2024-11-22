@@ -189,7 +189,7 @@ account_bind() {
 
     # Run the bind command with user input
     echo "Binding the account..."
-    ./root/multiple/multipleforlinux/multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 200 --bandwidth-upload 100
+    /root/multiple/multipleforlinux/multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 200 --bandwidth-upload 100
 
     # Check if the binding was successful
     if [ $? -eq 0 ]; then
