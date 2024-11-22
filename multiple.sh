@@ -93,10 +93,11 @@ node_setup() {
     # Define the paths for `multiple-cli` and `multiple-node`
     NODE_PATH="/root/multiple/multipleforlinux"
     CLI_PATH="/root/multiple/multipleforlinux/multiple-cli"
-    NODE_PATH="/root/multiple/multipleforlinux/multiple-node"
+    NODE_EXEC_PATH="/root/multiple/multipleforlinux/multiple-node"
 
     print_info "Please wait ..."
-    sleep 1 // wait 1 secound
+    sleep 1 # wait 1 second
+
     # Grant execute permissions to the `multiple-cli` file
     if [ -f "$CLI_PATH" ]; then
         echo "Granting execute permissions to $CLI_PATH"
@@ -106,17 +107,19 @@ node_setup() {
     fi
 
     print_info "Please wait ..."
-    sleep 1 // wait 1 secound
+    sleep 1 # wait 1 second
+
     # Grant execute permissions to the `multiple-node` file
-    if [ -f "$NODE_PATH" ]; then
-        echo "Granting execute permissions to $NODE_PATH"
-        chmod +x "$NODE_PATH"
+    if [ -f "$NODE_EXEC_PATH" ]; then
+        echo "Granting execute permissions to $NODE_EXEC_PATH"
+        chmod +x "$NODE_EXEC_PATH"
     else
-        echo "File $NODE_PATH does not exist. Please check the path and try again."
+        echo "File $NODE_EXEC_PATH does not exist. Please check the path and try again."
     fi
 
     print_info "Please wait ..."
-    sleep 1 // wait 1 secound
+    sleep 1 # wait 1 second
+
     # Add `multiple-cli` to PATH
     echo "Adding $NODE_PATH to PATH in /etc/profile"
     echo "PATH=\$PATH:$NODE_PATH" >> /etc/profile
@@ -126,7 +129,8 @@ node_setup() {
     echo "Updated PATH: $PATH"
 
     print_info "Please wait ..."
-    sleep 1 // wait 1 secound
+    sleep 1 # wait 1 second
+
     # Change permissions recursively for the folder
     echo "Setting 777 permissions for /root/multiple/multipleforlinux"
     chmod -R 777 /root/multiple/multipleforlinux
@@ -134,6 +138,7 @@ node_setup() {
     # Call the uni_menu function to display the menu
     master
 }
+
 
 
 
