@@ -91,9 +91,12 @@ setup_node() {
 # Function to set up the node
 node_setup() {
     # Define the paths for `multiple-cli` and `multiple-node`
+    NODE_PATH="/root/multiple/multipleforlinux"
     CLI_PATH="/root/multiple/multipleforlinux/multiple-cli"
     NODE_PATH="/root/multiple/multipleforlinux/multiple-node"
 
+    print_info "Please wait ..."
+    sleep 1 // wait 1 secound
     # Grant execute permissions to the `multiple-cli` file
     if [ -f "$CLI_PATH" ]; then
         echo "Granting execute permissions to $CLI_PATH"
@@ -102,6 +105,8 @@ node_setup() {
         echo "File $CLI_PATH does not exist. Please check the path and try again."
     fi
 
+    print_info "Please wait ..."
+    sleep 1 // wait 1 secound
     # Grant execute permissions to the `multiple-node` file
     if [ -f "$NODE_PATH" ]; then
         echo "Granting execute permissions to $NODE_PATH"
@@ -110,14 +115,18 @@ node_setup() {
         echo "File $NODE_PATH does not exist. Please check the path and try again."
     fi
 
+    print_info "Please wait ..."
+    sleep 1 // wait 1 secound
     # Add `multiple-cli` to PATH
-    echo "Adding $CLI_PATH to PATH in /etc/profile"
-    echo "PATH=\$PATH:$CLI_PATH" >> /etc/profile
+    echo "Adding $NODE_PATH to PATH in /etc/profile"
+    echo "PATH=\$PATH:$NODE_PATH" >> /etc/profile
 
     # Save and apply the changes
     source /etc/profile
     echo "Updated PATH: $PATH"
 
+    print_info "Please wait ..."
+    sleep 1 // wait 1 secound
     # Change permissions recursively for the folder
     echo "Setting 777 permissions for /root/multiple/multipleforlinux"
     chmod -R 777 /root/multiple/multipleforlinux
@@ -126,6 +135,30 @@ node_setup() {
     master
 }
 
+
+
+service_node() {
+    NODE_PATH="/root/multiple/multipleforlinux/multiple-node"
+    LOG_FILE="/root/multiple/multipleforlinux/output.log"
+
+    # Check if the multiple-node executable exists
+    if [ -f "$NODE_PATH" ]; then
+        echo "Starting the multiple-node..."
+        
+        # Run the node in the background
+        nohup "$NODE_PATH" > "$LOG_FILE" 2>&1 &
+        
+        # Notify the user
+        echo "multiple-node started successfully."
+        echo "Logs are being written to $LOG_FILE"
+    else
+        echo "Error: $NODE_PATH does not exist. Please check the path and ensure the node is set up correctly."
+        exit 1
+    fi
+
+    # Call the uni_menu function to display the menu
+    master
+}
 
 
 account_bind() {
@@ -151,37 +184,13 @@ account_bind() {
 
     # Run the bind command with user input
     echo "Binding the account..."
-    /root/multiple/multipleforlinux/multiple-cli bind --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --bandwidth-download 100 --bandwidth-upload 100 --storage 200
+    ./root/multiple/multipleforlinux/multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 200 --bandwidth-upload 100
 
     # Check if the binding was successful
     if [ $? -eq 0 ]; then
         echo "Account successfully bound!"
     else
         echo "Error: Failed to bind the account. Check the details and try again."
-    fi
-
-    # Call the uni_menu function to display the menu
-    master
-}
-
-
-service_node() {
-    NODE_PATH="/root/multiple/multipleforlinux/multiple-node"
-    LOG_FILE="/root/multiple/multipleforlinux/output.log"
-
-    # Check if the multiple-node executable exists
-    if [ -f "$NODE_PATH" ]; then
-        echo "Starting the multiple-node..."
-        
-        # Run the node in the background
-        nohup "$NODE_PATH" > "$LOG_FILE" 2>&1 &
-        
-        # Notify the user
-        echo "multiple-node started successfully."
-        echo "Logs are being written to $LOG_FILE"
-    else
-        echo "Error: $NODE_PATH does not exist. Please check the path and ensure the node is set up correctly."
-        exit 1
     fi
 
     # Call the uni_menu function to display the menu
@@ -272,8 +281,8 @@ master() {
     print_info "1. Install-Dependency"
     print_info "2. Setup-Multiple"
     print_info "3. Node-Setup"
-    print_info "4. Bind-Node"
-    print_info "5. Service-Setup"
+    print_info "4. Service-Start"
+    print_info "5. Bind-Node"
     print_info "6. Start-Node"
     print_info "7. Node-Stauts"
     print_info "8. Check-Logs"
@@ -300,10 +309,10 @@ master() {
             node_setup
             ;;
         4)
-            account_bind
+            service_node
             ;;
         5)
-            service_node
+            account_bind
             ;;
         6)
             start_node
