@@ -198,7 +198,7 @@ account_bind() {
     sleep 1 # wait 1 second
     # Run the bind command with user input
     echo "Binding the account using multiple-cli..."
-    ./multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 5000 --bandwidth-upload 100
+    ./multiple-cli bind --bandwidth-download 100 --identifier "$YOUR_IDENTIFIER" --pin "$YOUR_PIN" --storage 2000 --bandwidth-upload 100
 
     # Check if the binding was successful
     if [ $? -eq 0 ]; then
